@@ -1,5 +1,5 @@
-
 import { useState } from "react"
+import { useAtom } from "jotai"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,54 +12,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-const COURSES = [
-  {
-    id: 1,
-    title: "Introduction to Web Development",
-    description: "Learn the basics of HTML, CSS, and JavaScript",
-    modules: 12,
-    students: 156,
-    lastUpdated: "2023-04-15",
-    status: "Published",
-  },
-  {
-    id: 2,
-    title: "Advanced React Patterns",
-    description: "Master advanced React concepts and patterns",
-    modules: 8,
-    students: 89,
-    lastUpdated: "2023-05-22",
-    status: "Draft",
-  },
-  {
-    id: 3,
-    title: "Data Science Fundamentals",
-    description: "Introduction to data analysis and visualization",
-    modules: 15,
-    students: 210,
-    lastUpdated: "2023-03-10",
-    status: "Published",
-  },
-  {
-    id: 4,
-    title: "Mobile App Development with Flutter",
-    description: "Build cross-platform mobile applications",
-    modules: 10,
-    students: 124,
-    lastUpdated: "2023-06-05",
-    status: "Published",
-  },
-]
+import { userInfoAtom } from "@/state" 
 
 export default function CourseList() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [userInfo] = useAtom(userInfoAtom) 
 
-  const filteredCourses = COURSES.filter(
+  const filteredCourses = userInfo?.courses?.filter(
     (course) =>
       course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      course.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      course.description.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || []  
 
   return (
     <div className="space-y-6">
@@ -127,4 +90,3 @@ export default function CourseList() {
     </div>
   )
 }
-
