@@ -8,13 +8,16 @@ export enum Role {
   assistant = "Assistant",
 }
 
-
+interface IModule {
+  id: string; // Unique identifier for the module
+  title: string; // Name or title of the module
+}
 
 interface ICourse {
   id: number,
     title: string,
     description: string,
-    modules: number,
+    modules: IModule[],
     students: number,
     lastUpdated: string,
     status:string,
@@ -36,7 +39,11 @@ const sampleCourses: ICourse[] = [
     id: 1,
     title: "Introduction to Web Development",
     description: "Learn the basics of HTML, CSS, and JavaScript",
-    modules: 12,
+    modules: [
+      { id: "module-1", title: "Introduction to HTML" },
+      { id: "module-2", title: "CSS Basics" },
+      { id: "module-3", title: "JavaScript Fundamentals" },
+    ],
     students: 156,
     lastUpdated: "2023-04-15",
     status: "Published",
@@ -45,7 +52,11 @@ const sampleCourses: ICourse[] = [
     id: 2,
     title: "Advanced React Patterns",
     description: "Master advanced React concepts and patterns",
-    modules: 8,
+    modules: [
+      { id: "module-1", title: "Context API" },
+      { id: "module-2", title: "Hooks in Depth" },
+      { id: "module-3", title: "Render Props & Higher Order Components" },
+    ],
     students: 89,
     lastUpdated: "2023-05-22",
     status: "Draft",
@@ -54,7 +65,11 @@ const sampleCourses: ICourse[] = [
     id: 3,
     title: "Data Science Fundamentals",
     description: "Introduction to data analysis and visualization",
-    modules: 15,
+    modules: [
+      { id: "module-1", title: "Introduction to HTML" },
+      { id: "module-2", title: "CSS Basics" },
+      { id: "module-3", title: "JavaScript Fundamentals" },
+    ],
     students: 210,
     lastUpdated: "2023-03-10",
     status: "Published",
@@ -63,7 +78,11 @@ const sampleCourses: ICourse[] = [
     id: 4,
     title: "Mobile App Development with Flutter",
     description: "Build cross-platform mobile applications",
-    modules: 10,
+    modules: [
+      { id: "module-1", title: "Context API" },
+      { id: "module-2", title: "Hooks in Depth" },
+      { id: "module-3", title: "Render Props & Higher Order Components" },
+    ],
     students: 124,
     lastUpdated: "2023-06-05",
     status: "Published",

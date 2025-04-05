@@ -71,7 +71,7 @@ export default function CourseList() {
             </CardHeader>
             <CardContent>
               <div className="flex justify-between text-sm text-gray-400 mb-2">
-                <div>{course.modules} modules</div>
+                {/* <div>{course.modules} modules</div> */}
                 <div>{course.students} students</div>
               </div>
               <div className="flex justify-between items-center">

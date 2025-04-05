@@ -4,7 +4,7 @@ import {
   selectedUploadCourseAtom,
   uploadedFilesAtom,
   uploadStatusAtom,
-} from "@/state" // make sure this path matches
+} from "@/state" // Adjust the import paths if necessary
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,11 +13,13 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Upload, FileText, X, Check, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { userInfoAtom } from "@/state" // Import userInfoAtom for course details
 
 export default function CourseUpload() {
   const [files, setFiles] = useAtom(uploadedFilesAtom)
   const [selectedCourse, setSelectedCourse] = useAtom(selectedUploadCourseAtom)
   const [uploadStatus, setUploadStatus] = useAtom(uploadStatusAtom)
+  const [userInfo] = useAtom(userInfoAtom) // Access userInfoAtom to get the user's courses
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -48,6 +50,11 @@ export default function CourseUpload() {
     }, 1500)
   }
 
+  // Ensure userInfo and courses are available
+  const courses = userInfo?.courses || []
+  const selectedCourseDetails = courses.find((course) => course.title === selectedCourse)
+  const modules = selectedCourseDetails?.modules || []
+
   return (
     <div className="space-y-6">
       <Card className="bg-gray-900 border-gray-800 text-gray-200">
@@ -66,26 +73,28 @@ export default function CourseUpload() {
                 <SelectValue placeholder="Select a course" />
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-                <SelectItem value="web-dev">Introduction to Web Development</SelectItem>
-                <SelectItem value="react">Advanced React Patterns</SelectItem>
-                <SelectItem value="data-science">Data Science Fundamentals</SelectItem>
-                <SelectItem value="flutter">Mobile App Development with Flutter</SelectItem>
+                {courses.map((course) => (
+                  <SelectItem key={course.id} value={course.title}>
+                    {course.title}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Module Placeholder */}
+          {/* Module Select */}
           <div className="space-y-2">
-            <Label htmlFor="module">Module</Label>
+            <Label htmlFor="module">Select Module</Label>
             <Select disabled={!selectedCourse}>
               <SelectTrigger className="bg-gray-900 border-gray-700">
                 <SelectValue placeholder="Select a module" />
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-                <SelectItem value="module-1">Module 1: Introduction</SelectItem>
-                <SelectItem value="module-2">Module 2: Fundamentals</SelectItem>
-                <SelectItem value="module-3">Module 3: Advanced Concepts</SelectItem>
-                <SelectItem value="module-4">Module 4: Projects</SelectItem>
+                {modules.map((module) => (
+                  <SelectItem key={module.id} value={module.id}>
+                    {module.title}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
