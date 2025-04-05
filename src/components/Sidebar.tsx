@@ -71,12 +71,7 @@ export function Sidebar() {
         </div>
       )}
 
-      <div className="mt-auto p-4 border-t border-gray-800">
-        <Button variant="ghost" className="w-full justify-start">
-          <Settings className="mr-2 h-5 w-5" />
-          Settings
-        </Button>
-      </div>
+      
     </div>
   )
 }
