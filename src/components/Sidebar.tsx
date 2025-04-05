@@ -2,14 +2,17 @@ import { useAtom } from "jotai"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {ChevronDown,Search,BookOpen,Settings,PlusCircle} from "lucide-react"
-import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from "@/components/ui/select"
-
-import { selectedCourseAtom } from "@/state" // adjust path as needed
+import { ChevronDown, Search, BookOpen, Settings, PlusCircle } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { selectedCourseAtom, userInfoAtom } from "@/state" // Importing the required atoms
 
 export function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true)
   const [selectedCourse, setSelectedCourse] = useAtom(selectedCourseAtom)
+  const [userInfo] = useAtom(userInfoAtom) // Access userInfoAtom to get the user's courses
+
+  // Ensure userInfo and courses are available
+  const courses = userInfo?.courses || []
 
   return (
     <div className="w-80 border-r border-gray-800 flex flex-col bg-black">
@@ -19,10 +22,11 @@ export function Sidebar() {
             <SelectValue placeholder="Select a course" />
           </SelectTrigger>
           <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-            <SelectItem value="web-dev">Introduction to Web Development</SelectItem>
-            <SelectItem value="react">Advanced React Patterns</SelectItem>
-            <SelectItem value="data-science">Data Science Fundamentals</SelectItem>
-            <SelectItem value="flutter">Mobile App Development with Flutter</SelectItem>
+            {courses.map((course) => (
+              <SelectItem key={course.id} value={course.title}>
+                {course.title}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
@@ -53,20 +57,14 @@ export function Sidebar() {
       {isExpanded && (
         <div className="flex-1 overflow-auto">
           <div className="px-2">
-            {[
-              "Web Development",
-              "Data Science",
-              "Mobile App Development",
-              "UI/UX Design",
-              "Machine Learning"
-            ].map((course, index) => (
+            {courses.map((course) => (
               <Button
-                key={index}
+                key={course.id}
                 variant="ghost"
                 className="w-full justify-start py-2 px-4 text-left text-gray-300 hover:text-white hover:bg-gray-800"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
-                {course}
+                {course.title}
               </Button>
             ))}
           </div>

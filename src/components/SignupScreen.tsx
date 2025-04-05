@@ -9,7 +9,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Checkbox } from "@/components/ui/checkbox"
 
 // Import the signUpUser function
-import { signUpUser } from "@/auth/signup";  
+import { signUpUser } from "@/auth/signup";
 
 export default function SignupForm() {
   const [formData, setFormData] = useState({
