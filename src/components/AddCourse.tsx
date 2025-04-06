@@ -1,13 +1,13 @@
 import type React from "react"
 import { useState } from "react"
-import { Save, X, CheckCircle } from "lucide-react"
+import { Save, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { addCourse } from "@/supabase/addcourse" 
 
 export function AddCourseForm() {
   const [isLoading, setIsLoading] = useState(false)
@@ -15,12 +15,8 @@ export function AddCourseForm() {
   const [error, setError] = useState("")
 
   const [formData, setFormData] = useState({
-    title: "",
+    coursename: "",
     description: "",
-    modules: "",
-    students: "",
-    lastUpdated: "",
-    status: "",
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -28,37 +24,29 @@ export function AddCourseForm() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+ 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     setIsLoading(true)
-
-    if (!formData.title || !formData.description || !formData.status) {
+  
+    if (!formData.coursename || !formData.description) {
       setError("All fields are required")
       setIsLoading(false)
       return
     }
-
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    setSuccess(true)
-    setIsLoading(false)
-
-    setTimeout(() => {
-      setSuccess(false)
-      setFormData({
-        title: "",
-        description: "",
-        modules: "",
-        students: "",
-        lastUpdated: "",
-        status: "",
-      })
-    }, 3000)
+  
+    try {
+      await addCourse(formData)
+      setSuccess(true)
+      setFormData({ coursename: "", description: "" })
+      setTimeout(() => setSuccess(false), 3000)
+    } catch (err: any) {
+      setError(err.message || "Failed to create course")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -87,10 +75,10 @@ export function AddCourseForm() {
                 Course Title <span className="text-red-500">*</span>
               </Label>
               <Input
-                id="title"
-                name="title"
+                id="coursename"
+                name="coursename"
                 placeholder="e.g. Advanced React Development"
-                value={formData.title}
+                value={formData.coursename}
                 onChange={handleInputChange}
                 className="bg-gray-800 border-gray-700"
               />
@@ -110,56 +98,7 @@ export function AddCourseForm() {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="modules">Number of Modules</Label>
-              <Input
-                id="modules"
-                name="modules"
-                type="number"
-                placeholder="e.g. 8"
-                value={formData.modules}
-                onChange={handleInputChange}
-                className="bg-gray-800 border-gray-700"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="students">Number of Students</Label>
-              <Input
-                id="students"
-                name="students"
-                type="number"
-                placeholder="e.g. 150"
-                value={formData.students}
-                onChange={handleInputChange}
-                className="bg-gray-800 border-gray-700"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="lastUpdated">Last Updated</Label>
-              <Input
-                id="lastUpdated"
-                name="lastUpdated"
-                type="date"
-                value={formData.lastUpdated}
-                onChange={handleInputChange}
-                className="bg-gray-800 border-gray-700"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Select value={formData.status} onValueChange={(value) => handleSelectChange("status", value)}>
-                <SelectTrigger className="bg-gray-800 border-gray-700">
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-                  <SelectItem value="draft">Draft</SelectItem>
-                  <SelectItem value="published">Published</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            
 
             <div className="flex justify-between pt-4">
               <Button type="submit" className="bg-gray-800 hover:bg-gray-700" disabled={isLoading || success}>

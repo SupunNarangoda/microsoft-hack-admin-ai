@@ -4,7 +4,7 @@ import {
   selectedUploadCourseAtom,
   uploadedFilesAtom,
   uploadStatusAtom,
-} from "@/state" // Adjust the import paths if necessary
+} from "@/state" 
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -13,15 +13,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Upload, FileText, X, Check, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { userInfoAtom } from "@/state" // Import userInfoAtom for course details
+import { userInfoAtom } from "@/state" 
 import axios from 'axios'
 
 export default function CourseUpload() {
   const [files, setFiles] = useAtom(uploadedFilesAtom)
   const [selectedCourse, setSelectedCourse] = useAtom(selectedUploadCourseAtom)
   const [uploadStatus, setUploadStatus] = useAtom(uploadStatusAtom)
-  const [userInfo] = useAtom(userInfoAtom) // Access userInfoAtom to get the user's courses
-
+  const [userInfo] = useAtom(userInfoAtom) 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files).filter((file) => file.type === "application/pdf")
@@ -52,14 +51,12 @@ export default function CourseUpload() {
 
       console.log(response.data)
 
-      // Simulate upload success
       setTimeout(() => {
         setUploadStatus("success")
 
-        // Reset after delay
         setTimeout(() => {
           setUploadStatus("idle")
-          setFiles([]) // Clear files after successful upload
+          setFiles([]) 
         }, 3000)
       }, 1500)
     } catch (error) {
@@ -74,10 +71,7 @@ export default function CourseUpload() {
     }
   }
 
-  // Ensure userInfo and courses are available
   const courses = userInfo?.courses || []
-  const selectedCourseDetails = courses.find((course) => course.title === selectedCourse)
-  const modules = selectedCourseDetails?.modules || []
 
   return (
     <div className="space-y-6">
@@ -98,15 +92,15 @@ export default function CourseUpload() {
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
                 {courses.map((course) => (
-                  <SelectItem key={course.id} value={course.title}>
-                    {course.title}
+                  <SelectItem key={course.id} value={course.coursename}>
+                    {course.coursename}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          {/* Module Select */}
+          {/* Module Select
           <div className="space-y-2">
             <Label htmlFor="module">Select Module</Label>
             <Select disabled={!selectedCourse}>
@@ -121,7 +115,7 @@ export default function CourseUpload() {
                 ))}
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           {/* File Upload */}
           <div className="space-y-4">

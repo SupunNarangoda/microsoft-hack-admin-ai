@@ -2,16 +2,14 @@ import { useAtom } from "jotai"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { ChevronDown, Search, BookOpen, Settings, PlusCircle } from "lucide-react"
+import { ChevronDown, Search, BookOpen } from "lucide-react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { selectedCourseAtom, userInfoAtom } from "@/state" // Importing the required atoms
+import { selectedCourseAtom, userInfoAtom } from "@/state" 
 
 export function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(true)
   const [selectedCourse, setSelectedCourse] = useAtom(selectedCourseAtom)
-  const [userInfo] = useAtom(userInfoAtom) // Access userInfoAtom to get the user's courses
-
-  // Ensure userInfo and courses are available
+  const [userInfo] = useAtom(userInfoAtom) 
   const courses = userInfo?.courses || []
 
   return (
@@ -23,8 +21,8 @@ export function Sidebar() {
           </SelectTrigger>
           <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
             {courses.map((course) => (
-              <SelectItem key={course.id} value={course.title}>
-                {course.title}
+              <SelectItem key={course.id} value={course.coursename}>
+                {course.coursename}
               </SelectItem>
             ))}
           </SelectContent>
@@ -41,12 +39,6 @@ export function Sidebar() {
           />
         </div>
       </div>
-
-      <Button variant="ghost" className="mx-4 justify-start mb-4">
-        <PlusCircle className="mr-2 h-5 w-5" />
-        New Course
-      </Button>
-
       <div className="flex items-center justify-between px-4 py-2">
         <h2 className="text-sm font-semibold">Recent Courses</h2>
         <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)}>
@@ -64,7 +56,7 @@ export function Sidebar() {
                 className="w-full justify-start py-2 px-4 text-left text-gray-300 hover:text-white hover:bg-gray-800"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
-                {course.title}
+                {course.coursename}
               </Button>
             ))}
           </div>
