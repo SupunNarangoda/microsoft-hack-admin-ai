@@ -51,12 +51,12 @@ export default function CourseUpload() {
   
     const formData = new FormData()
     files.forEach((file) => {
-      formData.append('file', file)
+      formData.append('files', file)
     })
   
-    formData.append('universityName', universityName) 
+    formData.append('university', universityName) 
     formData.append('courseName', selectedCourse)
-  
+    
     try {
       // 🔐 Get session token from Supabase
       const {
@@ -67,14 +67,14 @@ export default function CourseUpload() {
       if (error || !session) {
         throw new Error("Failed to get session")
       }
-  
+      
       const token = session.access_token
       const apiUrl = import.meta.env.VITE_API_URL
-  
       const response = await axios.post(`${apiUrl}/uploadfile/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`, // ✅ Add token here
+          'Authorization': `Bearer ${token}`,
+         // ✅ Add token here
         },
       })
   
