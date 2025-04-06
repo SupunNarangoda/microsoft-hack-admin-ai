@@ -69,7 +69,7 @@ export default function CourseUpload() {
       }
 
       const token = session.access_token
-      const apiUrl = import.meta.env.VITE_API_URL
+      const apiUrl = import.meta.env.VITE_API_KEY
       const response = await axios.post(`${apiUrl}/uploadfile/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
