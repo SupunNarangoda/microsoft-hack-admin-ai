@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert"
 import { userInfoAtom } from "@/state"
 import axios from 'axios'
+import { supabase } from "@/supabase/supabase"
 
 export default function CourseUpload() {
   const [files, setFiles] = useAtom(uploadedFilesAtom)
@@ -47,25 +48,38 @@ export default function CourseUpload() {
 
   const handleUpload = async () => {
     setUploadStatus("idle")
-
+  
     const formData = new FormData()
     files.forEach((file) => {
       formData.append('file', file)
     })
-
+  
     formData.append('universityName', universityName) 
     formData.append('courseName', selectedCourse)
-
+  
     try {
-      const apiUrl = import.meta.env.VITE_API_URL;
+      // 🔐 Get session token from Supabase
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession()
+  
+      if (error || !session) {
+        throw new Error("Failed to get session")
+      }
+  
+      const token = session.access_token
+      const apiUrl = import.meta.env.VITE_API_URL
+  
       const response = await axios.post(`${apiUrl}/uploadfile/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`, // ✅ Add token here
         },
       })
-
+  
       console.log(response.data)
-
+  
       setTimeout(() => {
         setUploadStatus("success")
         setTimeout(() => {
@@ -75,7 +89,7 @@ export default function CourseUpload() {
       }, 1500)
     } catch (error) {
       console.error('Error uploading file:', error)
-
+  
       setTimeout(() => {
         setUploadStatus("error")
         setTimeout(() => {
