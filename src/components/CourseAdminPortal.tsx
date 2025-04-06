@@ -5,9 +5,10 @@ import { PlusCircle, MessageSquare, User } from "lucide-react"
 import  CourseList  from "@/components/CourseList"
 import  CourseUpload  from "@/components/CourseUpload"
 import { Sidebar } from "@/components/Sidebar"
+import { AddCourseForm } from "@/components/AddCourse"
 
 export default function CourseAdminPortal() {
-  const [activeTab, setActiveTab] = useState<"courses" | "upload">("courses")
+  const [activeTab, setActiveTab] = useState<"courses" | "upload" | "add-course">("courses")
 
   return (
     <div className="flex h-screen bg-black text-gray-200">
@@ -26,14 +27,15 @@ export default function CourseAdminPortal() {
         </header>
         <main className="flex-1 overflow-auto p-6">
           <Tabs value={activeTab} className="w-full" onValueChange={setActiveTab as (value: string) => void}>
-            <TabsList className="grid w-full grid-cols-2 mb-8">
+            <TabsList className="grid w-full grid-cols-3 mb-8">
               <TabsTrigger value="courses">Manage Courses</TabsTrigger>
               <TabsTrigger value="upload">Upload Content</TabsTrigger>
+              <TabsTrigger value="add-course">Add New Course</TabsTrigger> {/* Added this trigger */}
             </TabsList>
             <TabsContent value="courses" className="space-y-4">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold">All Courses</h2>
-                <Button className="bg-gray-800 hover:bg-gray-700">
+                <Button className="bg-gray-800 hover:bg-gray-700" onClick={() => setActiveTab("add-course")}>
                   <PlusCircle className="mr-2 h-4 w-4" />
                   Add New Course
                 </Button>
@@ -46,9 +48,16 @@ export default function CourseAdminPortal() {
               </div>
               <CourseUpload />
             </TabsContent>
+            <TabsContent value="add-course" className="space-y-4"> {/* Add Course tab content */}
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Add New Course</h2>
+              </div>
+              <AddCourseForm /> {/* Renders the AddCourseForm component */}
+            </TabsContent>
           </Tabs>
         </main>
       </div>
     </div>
   )
 }
+

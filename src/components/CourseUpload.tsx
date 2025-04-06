@@ -1,4 +1,4 @@
-import type React from "react"
+import React from "react"
 import { useAtom } from "jotai"
 import {
   selectedUploadCourseAtom,
@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Upload, FileText, X, Check, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { userInfoAtom } from "@/state" // Import userInfoAtom for course details
+import axios from 'axios'
 
 export default function CourseUpload() {
   const [files, setFiles] = useAtom(uploadedFilesAtom)
@@ -32,22 +33,45 @@ export default function CourseUpload() {
     setFiles((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     setUploadStatus("idle")
 
-    // Simulate upload
-    setTimeout(() => {
-      const success = Math.random() > 0.2
-      setUploadStatus(success ? "success" : "error")
+    const formData = new FormData()
+    files.forEach((file) => {
+      formData.append('files', file)
+    })
+    formData.append('universityName', 'ExampleUniversity')
+    formData.append('courseName', selectedCourse)
 
-      // Reset after delay
+    try {
+      const response = await axios.post(`${process.env.VITE_API_URL}/uploadfile/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      console.log(response.data)
+
+      // Simulate upload success
       setTimeout(() => {
-        setUploadStatus("idle")
-        if (success) {
-          setFiles([])
-        }
-      }, 3000)
-    }, 1500)
+        setUploadStatus("success")
+
+        // Reset after delay
+        setTimeout(() => {
+          setUploadStatus("idle")
+          setFiles([]) // Clear files after successful upload
+        }, 3000)
+      }, 1500)
+    } catch (error) {
+      console.error('Error uploading file:', error)
+
+      setTimeout(() => {
+        setUploadStatus("error")
+        setTimeout(() => {
+          setUploadStatus("idle")
+        }, 3000)
+      }, 1500)
+    }
   }
 
   // Ensure userInfo and courses are available
