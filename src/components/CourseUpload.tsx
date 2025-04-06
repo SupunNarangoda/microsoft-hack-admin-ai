@@ -50,14 +50,15 @@ export default function CourseUpload() {
 
     const formData = new FormData()
     files.forEach((file) => {
-      formData.append('files', file)
+      formData.append('file', file)
     })
 
     formData.append('universityName', universityName) 
     formData.append('courseName', selectedCourse)
 
     try {
-      const response = await axios.post(`${process.env.VITE_API_URL}/uploadfile/`, formData, {
+      const apiUrl = import.meta.env.VITE_API_URL;
+      const response = await axios.post(`${apiUrl}/uploadfile/`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
