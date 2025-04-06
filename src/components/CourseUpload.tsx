@@ -50,13 +50,13 @@ export default function CourseUpload() {
     setUploadStatus("idle")
   
     const formData = new FormData()
+    
     files.forEach((file) => {
       formData.append('files', file)
     })
-  
     formData.append('university', universityName) 
     formData.append('courseName', selectedCourse)
-    
+
     try {
       // 🔐 Get session token from Supabase
       const {
@@ -67,7 +67,7 @@ export default function CourseUpload() {
       if (error || !session) {
         throw new Error("Failed to get session")
       }
-      
+
       const token = session.access_token
       const apiUrl = import.meta.env.VITE_API_URL
       const response = await axios.post(`${apiUrl}/uploadfile/`, formData, {
@@ -132,11 +132,11 @@ export default function CourseUpload() {
                 <SelectValue placeholder="Select a course" />
               </SelectTrigger>
               <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-                {courses.map((course) => (
-                  <SelectItem key={course.id} value={course.coursename}>
-                    {course.coursename}
-                  </SelectItem>
-                ))}
+              {courses.map((course, index) => (
+                <SelectItem key={`${course.coursename}-${index}`} value={course.coursename}>
+                  {course.coursename}
+                </SelectItem>
+              ))}
               </SelectContent>
             </Select>
           </div>

@@ -20,11 +20,11 @@ export function Sidebar() {
             <SelectValue placeholder="Select a course" />
           </SelectTrigger>
           <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-            {courses.map((course) => (
-              <SelectItem key={course.id} value={course.coursename}>
-                {course.coursename}
-              </SelectItem>
-            ))}
+          {courses.map((course, index) => (
+            <SelectItem key={`${course.coursename}-${index}`} value={course.coursename}>
+              {course.coursename}
+            </SelectItem>
+          ))}
           </SelectContent>
         </Select>
       </div>
@@ -49,16 +49,16 @@ export function Sidebar() {
       {isExpanded && (
         <div className="flex-1 overflow-auto">
           <div className="px-2">
-            {courses.map((course) => (
-              <Button
-                key={course.id}
-                variant="ghost"
-                className="w-full justify-start py-2 px-4 text-left text-gray-300 hover:text-white hover:bg-gray-800"
-              >
-                <BookOpen className="mr-2 h-4 w-4" />
-                {course.coursename}
-              </Button>
-            ))}
+          {courses.map((course, index) => (
+            <Button
+              key={`${course.coursename}-${index}`}
+              variant="ghost"
+              className="w-full justify-start py-2 px-4 text-left text-gray-300 hover:text-white hover:bg-gray-800"
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              {course.coursename}
+            </Button>
+          ))}
           </div>
         </div>
       )}
