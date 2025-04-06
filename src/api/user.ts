@@ -41,27 +41,7 @@ async function getUser(userId: string) {
   // Make it a course name list
   const courseNames = courses.map((course) => course.coursename);
 
-  const { data: chatData, error: chatError } = await supabase
-    .from("chat")
-    .select(
-      `id,
-        coursename,
-        name,
-        university,
-        userid,
-        message (
-            id,
-            content,
-            role,
-            timestamp
-        )`,
-    )
-    .in("coursename", courseNames)
-    .eq("university", userData.university);
 
-  if (chatError) {
-    return null;
-  }
 
   const userInfo: IUserInfo = {
     name: userData.name,
