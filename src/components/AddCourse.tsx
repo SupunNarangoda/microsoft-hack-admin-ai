@@ -37,21 +37,17 @@ export function AddCourseForm() {
     setError("")
     setIsLoading(true)
 
-    // Validate form
     if (!formData.title || !formData.description || !formData.status) {
       setError("All fields are required")
       setIsLoading(false)
       return
     }
 
-    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
-    // Simulate successful course creation
     setSuccess(true)
     setIsLoading(false)
 
-    // Reset form after 3 seconds
     setTimeout(() => {
       setSuccess(false)
       setFormData({
