@@ -73,7 +73,26 @@ export async function fetchUserInfo(): Promise<Result<IUserInfo | null>> {
 }
 
 
-// ✅ Log in with Supabase auth
+// // ✅ Log in with Supabase auth
+// export async function logIn(
+//   email: string,
+//   password: string,
+// ): Promise<Result<IUserInfo>> {
+//   const { data, error } = await supabase.auth.signInWithPassword({
+//     email,
+//     password,
+//   });
+
+//   if (error) return { success: false, error };
+
+//   const userInfo = await getUser(data.user.id);
+//   if (!userInfo) {
+//     return { success: false, error: new Error("Failed to fetch user info") };
+//   }
+
+//   return { success: true, data: userInfo };
+// }
+
 export async function logIn(
   email: string,
   password: string,
@@ -86,8 +105,17 @@ export async function logIn(
   if (error) return { success: false, error };
 
   const userInfo = await getUser(data.user.id);
+
   if (!userInfo) {
     return { success: false, error: new Error("Failed to fetch user info") };
+  }
+
+  // ✅ Check if user is a Lecturer
+  if (userInfo.name !== "Lecturer") {
+    return {
+      success: false,
+      error: new Error("Access denied. This is the Lecturer portal."),
+    };
   }
 
   return { success: true, data: userInfo };

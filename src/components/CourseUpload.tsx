@@ -1,26 +1,39 @@
-import React from "react"
+import React, { useState } from "react"
 import { useAtom } from "jotai"
 import {
   selectedUploadCourseAtom,
   uploadedFilesAtom,
   uploadStatusAtom,
-} from "@/state" 
+} from "@/state"
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card, CardContent, CardDescription, CardFooter,
+  CardHeader, CardTitle
+} from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Upload, FileText, X, Check, AlertCircle } from "lucide-react"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { userInfoAtom } from "@/state" 
+import {
+  Select, SelectContent, SelectItem,
+  SelectTrigger, SelectValue
+} from "@/components/ui/select"
+import {
+  Upload, FileText, X, Check, AlertCircle
+} from "lucide-react"
+import {
+  Alert, AlertDescription, AlertTitle
+} from "@/components/ui/alert"
+import { userInfoAtom } from "@/state"
 import axios from 'axios'
 
 export default function CourseUpload() {
   const [files, setFiles] = useAtom(uploadedFilesAtom)
   const [selectedCourse, setSelectedCourse] = useAtom(selectedUploadCourseAtom)
   const [uploadStatus, setUploadStatus] = useAtom(uploadStatusAtom)
-  const [userInfo] = useAtom(userInfoAtom) 
+  const [userInfo] = useAtom(userInfoAtom)
+
+  const [universityName, setUniversityName] = useState("")
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files).filter((file) => file.type === "application/pdf")
@@ -39,7 +52,8 @@ export default function CourseUpload() {
     files.forEach((file) => {
       formData.append('files', file)
     })
-    formData.append('universityName', 'ExampleUniversity')
+
+    formData.append('universityName', universityName) 
     formData.append('courseName', selectedCourse)
 
     try {
@@ -53,10 +67,9 @@ export default function CourseUpload() {
 
       setTimeout(() => {
         setUploadStatus("success")
-
         setTimeout(() => {
           setUploadStatus("idle")
-          setFiles([]) 
+          setFiles([])
         }, 3000)
       }, 1500)
     } catch (error) {
@@ -83,6 +96,19 @@ export default function CourseUpload() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+
+          {/* ✅ University Name Input */}
+          <div className="space-y-2">
+            <Label htmlFor="university">University Name</Label>
+            <Input
+              id="university"
+              placeholder="Enter your university"
+              value={universityName}
+              onChange={(e) => setUniversityName(e.target.value)}
+              className="bg-gray-900 border-gray-700 text-white"
+            />
+          </div>
+
           {/* Course Select */}
           <div className="space-y-2">
             <Label htmlFor="course">Select Course</Label>
@@ -99,23 +125,6 @@ export default function CourseUpload() {
               </SelectContent>
             </Select>
           </div>
-
-          {/* Module Select
-          <div className="space-y-2">
-            <Label htmlFor="module">Select Module</Label>
-            <Select disabled={!selectedCourse}>
-              <SelectTrigger className="bg-gray-900 border-gray-700">
-                <SelectValue placeholder="Select a module" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-gray-800 text-gray-200">
-                {modules.map((module) => (
-                  <SelectItem key={module.id} value={module.id}>
-                    {module.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div> */}
 
           {/* File Upload */}
           <div className="space-y-4">
@@ -177,7 +186,7 @@ export default function CourseUpload() {
         <CardFooter>
           <Button
             className="w-full bg-gray-800 hover:bg-gray-700"
-            disabled={files.length === 0 || !selectedCourse || uploadStatus !== "idle"}
+            disabled={files.length === 0 || !selectedCourse || !universityName || uploadStatus !== "idle"}
             onClick={handleUpload}
           >
             <Upload className="mr-2 h-4 w-4" />
